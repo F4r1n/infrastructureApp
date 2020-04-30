@@ -23,7 +23,7 @@ const styles = theme => ({
         padding: theme.spacing()
     },
     smalltextfield: {
-        width: theme.spacing(80),
+        width: theme.spacing(60),
         border: "0.01em solid white",
         padding: theme.spacing(),
         margin: theme.spacing(2)
@@ -35,6 +35,9 @@ const styles = theme => ({
         margin: theme.spacing(2),
         height: theme.spacing(20),
         width: theme.spacing(20)
+    },
+    paper: {
+        margin: theme.spacing(2)
     }
 });
 
@@ -209,7 +212,7 @@ class Home extends React.Component {
                         fullWidth
                         autoFocus
                         rows={5}
-                        helperText="Available Languages: English, Spanish, French, German, Italian, Protugese, Japanese, Korean, Arabic, Hindi, Chinese, Chinese (Taiwan)"
+                        helperText="Available Languages: English, Spanish, French, German, Italian, Portugese, Japanese, Korean, Arabic, Hindi, Chinese, Chinese (Taiwan)"
                         size="medium"
                         value={this.state.text}
                         onChange={(event) => { this.setState({ text: event.target.value }) }}
@@ -221,21 +224,29 @@ class Home extends React.Component {
                         : <Button onClick={() => { this.setState({ loading: true }); this.sendCall() }} variant="contained" color="primary" className={classes.button}>Absenden</Button>}
                 </Grid>
                 {this.state.result && <Grid item>
-                    <Paper elevation={2}>
-
-                        <TextField
-                            className={classes.smalltextfield}
-                            disabled
-                            multiline
-                            fullWidth
-                            rows={5}
-                            helperText="Translation: "
-                            size="medium"
-                            value={this.state.translation}
-                        />
-                        {this.state.flag}
-                        {this.state.sentiment}
-                        <Button onClick={()=>{this.setState({result: false, text: ""})}} variant="contained" color="primary">Reset</Button>
+                    <Paper elevation={2} className={classes.paper}>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="center">
+                            <Grid item>
+                                <TextField
+                                    className={classes.smalltextfield}
+                                    multiline
+                                    fullWidth
+                                    rows={5}
+                                    label="Translation"
+                                    size="medium"
+                                    value={this.state.translation}
+                                />
+                            </Grid>
+                            <Grid item>
+                                {this.state.flag}
+                                {this.state.sentiment}
+                            </Grid>
+                            <Grid item><Button className={classes.button} onClick={() => { this.setState({ result: false, text: "" }) }} variant="contained" color="primary">Reset</Button></Grid>
+                        </Grid>
                     </Paper>
                 </Grid>}
             </Grid>
