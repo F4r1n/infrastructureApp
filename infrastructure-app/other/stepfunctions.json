@@ -1,0 +1,65 @@
+{
+  "StartAt": "getLanguage",
+  "Comment": "comprehend workflow",
+  "Version": "1.0",
+  "States": {
+    "getLanguage": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:695163145776:function:getLangauge",
+      "Next": "Parallel",
+      "InputPath": "$.getLanguageInput",
+      "ResultPath": "$.getLanguageOutput"
+    },
+    "Parallel": {
+      "Type": "Parallel",
+      "Next": "putDatabase",
+      "Branches": [
+        {
+          "StartAt": "adapter",
+          "States": {
+            "adapter": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:695163145776:function:adapter",
+              "Next": "getSentiment",
+              "InputPath": "$",
+              "ResultPath": "$"
+            },
+            "getSentiment": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:695163145776:function:getSentiment",
+              "InputPath": "$.getSentimentInput",
+              "ResultPath": "$.getSentimentOutput",
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "adapter2",
+          "States": {
+            "adapter2": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:695163145776:function:adapter2",
+              "Next": "translate",
+              "InputPath": "$",
+              "ResultPath": "$"
+            },
+            "translate": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:695163145776:function:translate",
+              "InputPath": "$.translateInput",
+              "ResultPath": "$.translateOutput",
+              "End": true
+            }
+          }
+        }
+      ]
+    },
+    "putDatabase": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:695163145776:function:putDatabase",
+      "InputPath": "$.putDatabaseInput",
+      "ResultPath": "$.putDatabaseOutput",
+      "End": true
+    }
+  }
+}
