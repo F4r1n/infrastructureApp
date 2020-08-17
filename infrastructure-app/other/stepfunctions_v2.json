@@ -1,0 +1,51 @@
+{
+    "StartAt": "getLanguage",
+    "Comment": "comprehend workflow",
+    "Version": "1.0",
+    "States": {
+      "getLanguage": {
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:us-east-1:380607133763:function:getLanguage",
+        "Next": "Parallel",
+        "InputPath": "$",
+        "ResultPath": "$"
+      },
+      "Parallel": {
+        "Type": "Parallel",
+        "Next": "putDatabase",
+        "Branches": [
+          {
+            "StartAt": "getSentiment",
+            "States": {
+              "getSentiment": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:us-east-1:380607133763:function:getSentiment",
+                "InputPath": "$",
+                "ResultPath": "$",
+                "End": true
+              }
+            }
+          },
+          {
+            "StartAt": "translate",
+            "States": {
+              "translate": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:us-east-1:380607133763:function:translate",
+                "InputPath": "$",
+                "ResultPath": "$",
+                "End": true
+              }
+            }
+          }
+        ]
+      },
+      "putDatabase": {
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:us-east-1:380607133763:function:putDatabase",
+        "InputPath": "$",
+        "ResultPath": "$",
+        "End": true
+      }
+    }
+  }
